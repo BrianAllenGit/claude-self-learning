@@ -36,7 +36,7 @@ your-repo/
         backend.md    ← grows smarter every session
         frontend.md
       code-review/
-        patterns.md
+        general.md
 ```
 
 ## Making Your Own Self-Learning Skill

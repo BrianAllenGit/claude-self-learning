@@ -1,3 +1,8 @@
+---
+name: self-learning
+description: Explains how the self-learning plugin works and how to use it — pattern injection, auto-reflection, and the /reflect skill
+---
+
 # Self-Learning Skills System
 
 This plugin makes every Claude skill self-improving. Here's how it works and how to use it.
@@ -26,7 +31,7 @@ Patterns live at `.claude/patterns/<skill-name>/` in each repo and are committed
     backend.md
     frontend.md
   code-review/
-    patterns.md
+    general.md
 ```
 
 Teammates benefit automatically when they pull — as long as they have this plugin installed.

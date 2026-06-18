@@ -2,7 +2,6 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "${SCRIPT_DIR}/.." && pwd)}"
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(pwd)}"
 CLAUDE_DIR="${PROJECT_DIR}/.claude"
 

@@ -1,3 +1,8 @@
+---
+name: reflect
+description: Analyze the current conversation and extract learnings into this repo's pattern files (.claude/patterns/)
+---
+
 # /reflect — Self-Learning Pattern Extractor
 
 Analyze the current conversation and extract learnings into this repo's pattern files.
@@ -12,9 +17,8 @@ Scan the conversation for:
 
 **Step 2: Extract patterns using these four categories**
 
-Apply the same logic from `shared/reflect-prompt.md` in this plugin:
 - Corrections/pushbacks from the user → Anti-Patterns
-- Validated/confirmed approaches → Confirmed Patterns  
+- Validated/confirmed approaches → Confirmed Patterns
 - Project context that emerged → Stack and Conventions
 - Only capture what's specific and actionable. Skip generic advice.
 
