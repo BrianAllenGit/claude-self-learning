@@ -1,0 +1,11 @@
+{
+  "name": "self-learning",
+  "description": "Makes any Claude skill self-improving through automatic per-repo pattern learning",
+  "version": "1.0.0",
+  "author": {
+    "name": "BrianAllenGit"
+  },
+  "homepage": "https://github.com/BrianAllenGit/claude-self-learning",
+  "repository": "https://github.com/BrianAllenGit/claude-self-learning",
+  "license": "MIT"
+}
