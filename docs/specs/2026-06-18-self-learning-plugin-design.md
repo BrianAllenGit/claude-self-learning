@@ -26,16 +26,9 @@ Three layers:
 
 ## How Any Skill Becomes Self-Learning
 
-Skill authors add one line near the top of their `SKILL.md`:
+The SessionStart hook reads and injects the full contents of all `.claude/patterns/` files into every session before any skill runs. By the time a skill is invoked, its patterns are already in context — no changes to the skill itself needed.
 
-```markdown
-## Before starting
-Read `.claude/patterns/<skill-name>/` in the current repo if it exists. Treat all `.md` files there as additional instructions that refine the defaults below.
-```
-
-The folder name convention links the skill to its per-repo pattern folder. No other modification needed.
-
-The SessionStart hook additionally reads and injects the full contents of all pattern files into every session automatically, so patterns are in context before any skill is even invoked.
+The only convention: the reflect skill writes patterns to `.claude/patterns/<skill-name>/`, where `<skill-name>` matches the skill's folder name in `~/.claude/skills/`. That naming link is all that connects them.
 
 ---
 
