@@ -8,6 +8,12 @@ HOOK="${PLUGIN_ROOT}/hooks/session-start.sh"
 pass=0
 fail=0
 
+tmp_project=""
+tmp_empty=""
+tmp_flag=""
+cleanup() { rm -rf "${tmp_project:-}" "${tmp_empty:-}" "${tmp_flag:-}"; }
+trap cleanup EXIT
+
 run_test() {
   local name="$1"
   local result="$2"
@@ -37,7 +43,14 @@ run_test "outputs hookSpecificOutput" "$result" "hookSpecificOutput"
 # Test 2: No patterns directory — exits cleanly with no output
 tmp_empty=$(mktemp -d)
 result=$(CLAUDE_PROJECT_DIR="$tmp_empty" CLAUDE_PLUGIN_ROOT="$PLUGIN_ROOT" bash "$HOOK")
-run_test "empty project outputs nothing" "$result" ""
+if [ -z "$result" ]; then
+  echo "PASS: empty project outputs nothing"
+  pass=$((pass + 1))
+else
+  echo "FAIL: empty project outputs nothing"
+  echo "  Expected empty output, got: $result"
+  fail=$((fail + 1))
+fi
 
 # Test 3: Deletes .reflect-done flag on start
 tmp_flag=$(mktemp -d)
@@ -51,8 +64,6 @@ else
   echo "FAIL: should have deleted .reflect-done flag"
   fail=$((fail + 1))
 fi
-
-rm -rf "$tmp_project" "$tmp_empty" "$tmp_flag"
 
 echo ""
 echo "Results: ${pass} passed, ${fail} failed"
