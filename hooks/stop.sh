@@ -27,17 +27,21 @@ if [ -z "$PYTHON" ]; then
   exit 0
 fi
 
-# Find the most recent conversation JSONL for this project
-# Claude Code stores conversations at ~/.claude/projects/<encoded-path>/
+# Find the most recent conversation JSONL using Python for reliable cross-platform mtime comparison
 PROJECTS_DIR="${HOME}/.claude/projects"
 if [ ! -d "$PROJECTS_DIR" ]; then
   exit 0
 fi
 
-# Find the most recently modified JSONL across all project folders
-conversation_file=$(find "$PROJECTS_DIR" -name "*.jsonl" -type f 2>/dev/null \
-  | xargs ls -t 2>/dev/null \
-  | head -1)
+conversation_file=$(PROJECTS_DIR_VAL="$PROJECTS_DIR" "$PYTHON" - <<'PYEOF'
+import os, glob
+
+projects_dir = os.environ["PROJECTS_DIR_VAL"]
+jsonl_files = glob.glob(os.path.join(projects_dir, "**", "*.jsonl"), recursive=True)
+if jsonl_files:
+    print(max(jsonl_files, key=os.path.getmtime))
+PYEOF
+)
 
 if [ -z "$conversation_file" ] || [ ! -f "$conversation_file" ]; then
   exit 0
@@ -47,12 +51,12 @@ fi
 REFLECT_PROMPT=$(cat "${PLUGIN_ROOT}/shared/reflect-prompt.md")
 conversation=$(tail -c 50000 "$conversation_file")
 
-# Build and send API request
-response=$("$PYTHON" - <<PYEOF
+# Build and send API request — pass data via env vars to avoid heredoc injection
+response=$(REFLECT_PROMPT_VAL="$REFLECT_PROMPT" CONVERSATION_VAL="$conversation" "$PYTHON" - <<'PYEOF'
 import json, urllib.request, os
 
-prompt = """${REFLECT_PROMPT}"""
-conversation = """${conversation}"""
+prompt = os.environ["REFLECT_PROMPT_VAL"]
+conversation = os.environ["CONVERSATION_VAL"]
 
 payload = json.dumps({
     "model": "claude-haiku-4-5-20251001",
@@ -83,11 +87,12 @@ fi
 
 # Parse response and write pattern files
 # Expected format: === FILE: .claude/patterns/skill/type.md ===\n[content]\n=== END ===
-"$PYTHON" - <<PYEOF
+# Normalize line endings before matching to handle \r\n from HTTP responses
+RESPONSE_VAL="$response" PROJECT_DIR_VAL="$PROJECT_DIR" "$PYTHON" - <<'PYEOF'
 import re, os
 
-response = """${response}"""
-project_dir = "${PROJECT_DIR}"
+response = os.environ["RESPONSE_VAL"].replace('\r\n', '\n')
+project_dir = os.environ["PROJECT_DIR_VAL"]
 
 pattern = r'=== FILE: (.+?) ===\n(.*?)\n=== END ==='
 matches = re.findall(pattern, response, re.DOTALL)
