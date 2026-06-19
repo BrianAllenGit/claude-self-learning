@@ -1,0 +1,14 @@
+{
+  "name": "brian-allen",
+  "description": "Plugins by BrianAllenGit",
+  "owner": {
+    "name": "BrianAllenGit"
+  },
+  "plugins": [
+    {
+      "name": "self-learning",
+      "source": ".",
+      "description": "Makes any Claude skill self-improving through automatic per-repo pattern learning"
+    }
+  ]
+}

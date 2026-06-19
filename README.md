@@ -14,8 +14,11 @@ Patterns live in `.claude/patterns/` inside each repo, committed to git. Teammat
 
 ## Install
 
-```bash
-claude plugins install BrianAllenGit/claude-self-learning
+In Claude Code, run these two slash commands:
+
+```
+/plugin marketplace add BrianAllenGit/claude-self-learning
+/plugin install self-learning@brian-allen
 ```
 
 Requires `ANTHROPIC_API_KEY` in your environment for the automatic Stop hook.
